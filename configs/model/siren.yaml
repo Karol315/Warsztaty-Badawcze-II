@@ -1,0 +1,6 @@
+_target_: model.siren.SirenModel
+in_features: 2
+hidden_features: 256
+hidden_layers: 4
+out_features: 1
+omega_0: 30.0

@@ -1,0 +1,2 @@
+run:
+  dir: /path/to/your/storage/${now:%Y-%m-%d}/${now:%H-%M-%S}
