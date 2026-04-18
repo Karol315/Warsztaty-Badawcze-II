@@ -21,7 +21,11 @@ def preprocess_config(config):
     if not log_cwd == log_dir and not log_cwd.exists():
         log_cwd.parent.mkdir(exist_ok=True, parents=True)
         try:
-            log_cwd.symlink_to(log_dir, target_is_directory=True)
+            # log_cwd.symlink_to(log_dir, target_is_directory=True)
+            try:
+                log_cwd.symlink_to(log_dir, target_is_directory=True)
+            except OSError:
+                pass  # Ignorujemy brak uprawnień administratora na Windowsie
         except FileExistsError:
             log.info("Attempting to symlink to existing directory.")
 

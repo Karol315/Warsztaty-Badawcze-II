@@ -1,0 +1,1 @@
+ $env:WANDB_MODE="offline"; uv run python src/main.py

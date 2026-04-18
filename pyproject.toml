@@ -1,17 +1,18 @@
 [project]
-name = "project"
+name = "WB2"
 version = "0.1.0"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     # Core experiment stack
-    "torch>=2.4.0",
     "hydra-core>=1.3.0",
     "omegaconf>=2.3.0",
     "wandb>=0.17.0",
     "tqdm>=4.66.0",
     "numpy>=2.0.0",
     "ruff",
+    "matplotlib>=3.10.8",
+    "torch>=2.5.1",
 ]
 
 [build-system]
@@ -40,5 +41,13 @@ ignore = [
     "N812", # Lowercase imported as non-lowercase
 ]
 
+[[tool.uv.index]]
+url = "https://download.pytorch.org/whl/cu121"
+
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.5.1",
+]

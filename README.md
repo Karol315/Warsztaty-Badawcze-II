@@ -1,4 +1,4 @@
-# Exploration Strategies
+gemini# Exploration Strategies
 
 ## Overall Goal
 The goal is to:

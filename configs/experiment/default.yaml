@@ -1,3 +1,8 @@
 # Experiment-level settings.
 # Override exp.seed, exp.device, etc. from the command line or child configs.
 # exp.run_func is set in config.yaml and dispatches to experiment/run.py.
+# @package _global_
+exp:
+  epochs: 5000
+  device: cuda
+  seed: 42
