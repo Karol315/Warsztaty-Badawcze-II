@@ -1,29 +1,19 @@
-import math
-import torch
-from metric.base import BaseMetric
+import numpy as np
+from typing import Dict
+from .base import BaseMetric
+
 
 class PSNRMetric(BaseMetric):
-    def __init__(self):
-        super().__init__()
-        self.reset()
+    def compute(self, pred: np.ndarray, target: np.ndarray) -> Dict[str, float]:
+        # Środowisko binarne (0 i 1), więc max wartość to 1.0.
+        mse = np.mean((pred - target) ** 2)
 
-    def reset(self):
-        self.total_mse = 0.0
-        self.count = 0
+        if mse == 0:
+            psnr = float('inf')
+        else:
+            psnr = 10 * np.log10(1.0 / mse)
 
-    def update(self, preds, targets):
-        mse = torch.nn.functional.mse_loss(preds, targets, reduction="sum")
-        self.total_mse += mse.item()
-        self.count += targets.numel()
-
-    def compute_and_log(self):
-        if self.count == 0:
-            return 0.0
-        mean_mse = self.total_mse / self.count
-        if mean_mse == 0:
-            return 100.0 # Idealny wynik
-
-        # Zgodnie z dokumentacją: 10 * log10(1 / MSE) dla danych znormalizowanych
-        psnr = 10 * math.log10(1.0 / mean_mse)
-        self.reset()
-        return psnr
+        return {
+            "mse": mse,
+            "psnr": psnr
+        }

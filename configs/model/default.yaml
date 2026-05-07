@@ -1,6 +1,9 @@
-# Replace with your model config.
-# Example:
-#   _target_: model.my_model.MyModel
-#   hidden_dim: 256
-#   num_layers: 4
-_target_: model.base.BaseModel
+_target_: src.model.siren.SirenModel
+in_features: 2
+hidden_features: 256
+hidden_layers: 3
+out_features: 1
+outermost_linear: true
+first_omega_0: 30.0
+hidden_omega_0: 10.0
+dropout_rate: 0.1     

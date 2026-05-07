@@ -1,11 +1,10 @@
-import numpy as np
 import torch
-import torch.nn as nn
-from model.base import BaseModel
-
+from torch import nn
+import numpy as np
+from .base import BaseWorldModel
 
 class SineLayer(nn.Module):
-    def __init__(self, in_features, out_features, bias=True, is_first=False, omega_0=30):
+    def __init__(self, in_features: int, out_features: int, bias: bool, is_first: bool, omega_0: float):
         super().__init__()
         self.omega_0 = omega_0
         self.is_first = is_first
@@ -18,27 +17,42 @@ class SineLayer(nn.Module):
             if self.is_first:
                 self.linear.weight.uniform_(-1 / self.in_features, 1 / self.in_features)
             else:
-                self.linear.weight.uniform_(-np.sqrt(6 / self.in_features) / self.omega_0,
-                                            np.sqrt(6 / self.in_features) / self.omega_0)
+                self.linear.weight.uniform_(
+                    -np.sqrt(6 / self.in_features) / self.omega_0,
+                    np.sqrt(6 / self.in_features) / self.omega_0
+                )
 
-    def forward(self, x):
-        return torch.sin(self.omega_0 * self.linear(x))
+    def forward(self, input):
+        return torch.sin(self.omega_0 * self.linear(input))
 
-
-class SirenModel(BaseModel):
-    def __init__(self, in_features=2, hidden_features=256, hidden_layers=4, out_features=1, omega_0=30):
+class SirenModel(BaseWorldModel):
+    def __init__(
+        self, in_features: int, hidden_features: int, hidden_layers: int,
+        out_features: int, outermost_linear: bool, first_omega_0: float, hidden_omega_0: float,
+        dropout_rate: float = 0.0
+    ):
         super().__init__()
         self.net = []
-        self.net.append(SineLayer(in_features, hidden_features, is_first=True, omega_0=omega_0))
-        for _ in range(hidden_layers):
-            self.net.append(SineLayer(hidden_features, hidden_features, is_first=False, omega_0=omega_0))
+        self.net.append(SineLayer(in_features, hidden_features, bias=True, is_first=True, omega_0=first_omega_0))
 
-        final_linear = nn.Linear(hidden_features, out_features)
-        with torch.no_grad():
-            final_linear.weight.uniform_(-np.sqrt(6 / hidden_features) / omega_0,
-                                         np.sqrt(6 / hidden_features) / omega_0)
-        self.net.append(final_linear)
-        self.net.append(nn.Sigmoid())
+        for _ in range(hidden_layers):
+            self.net.append(SineLayer(hidden_features, hidden_features, bias=True, is_first=False, omega_0=hidden_omega_0))
+
+        # Dropout TYLKO na przedostatniej warstwie - służy do MC Dropout, ale nie psuje uczenia funkcji falowych
+        if dropout_rate > 0:
+            self.net.append(nn.Dropout(dropout_rate))
+
+        if outermost_linear:
+            final_linear = nn.Linear(hidden_features, out_features)
+            with torch.no_grad():
+                final_linear.weight.uniform_(
+                    -np.sqrt(6 / hidden_features) / hidden_omega_0,
+                    np.sqrt(6 / hidden_features) / hidden_omega_0
+                )
+            self.net.append(final_linear)
+        else:
+            self.net.append(SineLayer(hidden_features, out_features, bias=True, is_first=False, omega_0=hidden_omega_0))
+
         self.net = nn.Sequential(*self.net)
 
     def forward(self, coords):
