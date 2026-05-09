@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from typing import Any
-from src.env.base import BaseEnv
+from src.environment.base import BaseEnv
 from src.agent.memory import EpisodicMemory
 
 log = logging.getLogger(__name__)

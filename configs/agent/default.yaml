@@ -1,7 +1,7 @@
 _target_: src.agent.core.Agent
 memory:
   _target_: src.agent.memory.EpisodicMemory
-  map_size: ${env.size}
+  map_size: ${environment.size}
   unknown_value: -1
 perception:
   _target_: src.agent.perception.raycasting.RaycastPerception

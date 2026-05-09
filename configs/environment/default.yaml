@@ -1,0 +1,3 @@
+_target_: src.environment.maze_discrete.DiscreteMaze
+size: 65
+max_steps: 200

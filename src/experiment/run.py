@@ -36,7 +36,7 @@ def run_experiment(cfg: DictConfig):
 
     log.info(f"Rozpoczynam eksperyment: {cfg.experiment_name} (Seed: {seed})")
 
-    env = hydra.utils.instantiate(cfg.env)
+    env = hydra.utils.instantiate(cfg.environment)
     model = hydra.utils.instantiate(cfg.model)
     agent = hydra.utils.instantiate(cfg.agent)
     metric_module = hydra.utils.instantiate(cfg.metric)
