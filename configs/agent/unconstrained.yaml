@@ -1,5 +1,5 @@
 _target_: src.agent.core.Agent
-max_steps: 10
+max_steps: 40
 
 memory:
   _target_: src.agent.memory.EpisodicMemory
@@ -19,5 +19,4 @@ movement:
     - _target_: src.agent.movement.rules.ObstacleRule
     - _target_: src.agent.movement.rules.FrontierRule
     - _target_: src.agent.movement.rules.NoStayRule
-    - _target_: src.agent.movement.rules.BudgetRule
-      max_distance: 8
+    

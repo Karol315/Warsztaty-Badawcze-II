@@ -5,7 +5,8 @@ class EpisodicMemory:
     def __init__(self, map_size: int, unknown_value: int):
         self.map_size = map_size
         self.unknown_value = unknown_value
-        self.explored_map = np.full((map_size, map_size), unknown_value, dtype=np.int8)
+        # ZMIANA: np.float32 zamiast np.int8, żeby pamięć mogła trzymać ułamki SDF!
+        self.explored_map = np.full((map_size, map_size), unknown_value, dtype=np.float32)
         self.visited_positions = []
 
     def update(self, current_pos: Tuple[int, int], visible_points: np.ndarray, visible_values: np.ndarray):

@@ -1,0 +1,2 @@
+_target_: src.agent.strategy.greedy.GreedyStrategy
+vision_radius: 8

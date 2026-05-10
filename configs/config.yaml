@@ -4,6 +4,7 @@ defaults:
   - agent: default
   - model: default
   - metric: default
+  - strategy: greedy
 
 experiment_name: "Test_Architektury"
 seed: 1
