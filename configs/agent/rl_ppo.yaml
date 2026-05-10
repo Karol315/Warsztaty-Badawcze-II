@@ -1,0 +1,32 @@
+_target_: src.agent.core.Agent
+max_steps: 10
+
+memory:
+  _target_: src.agent.memory.EpisodicMemory
+  map_size: ${environment.size}
+  unknown_value: -1
+
+perception:
+  _target_: src.agent.perception.raycasting.RaycastPerception
+  num_rays: 72
+  vision_radius: 8.0
+
+strategy:
+  _target_: src.agent.strategy.ppo.PPOStrategy
+  map_size: ${environment.size}
+  total_timesteps: 200000   # zwiększ do 500000+ dla lepszych wyników
+  n_envs: 4
+  model_path: outputs/ppo_policy  # null = nie zapisuje; podaj ścieżkę żeby cache'ować model
+
+uncertainty_module:
+  _target_: src.agent.uncertainty_quantification.mcdropout.MCDropoutUncertainty
+  num_samples: 10
+
+movement:
+  _target_: src.agent.movement.engine.MovementEngine
+  rules:
+    - _target_: src.agent.movement.rules.ObstacleRule
+    - _target_: src.agent.movement.rules.FrontierRule
+    - _target_: src.agent.movement.rules.NoStayRule
+    - _target_: src.agent.movement.rules.BudgetRule
+      max_distance: 8
